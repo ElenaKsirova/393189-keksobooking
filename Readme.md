@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Elena Ksirova](https://up.htmlacademy.ru/javascript/10/user/393189).
-* Наставник: `Неизвестно`.
+* Наставник: [Максим Клевцов](https://htmlacademy.ru/profile/maxklevtsov).
 
 ---
 
