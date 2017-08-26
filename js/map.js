@@ -1,5 +1,8 @@
 'use strict';
 
+var VK_ENTER = 13;
+var VK_ESC = 27;
+
 // в задании тип "дворец" не был указан, хотя слово "дворец"
 // встречается в описаниях - ошибка в задании?
 
@@ -265,6 +268,7 @@ var createPinElement = function (ad) {
 
   newDiv.className = 'pin';
   newDiv.style = 'left: ' + left + 'px; top: ' + top + 'px';
+  newDiv.tabIndex = 0;
 
 
   var newImg = document.createElement('img');
@@ -291,7 +295,11 @@ var createPinElements = function (ads) {
 };
 
 
-var renderDialogPanel = function (ad, templateSelector, destPanelSelector, titleSelector) {
+var renderDialogPanel = function (ad) {
+  var templateSelector = '#lodge-template';
+  var destPanelSelector = '.dialog__panel';
+  var titleSelector = '.dialog__title';
+
   var RUBLE_SIGN = '&#x20bd;';
 
   var newPanel = document.querySelector(templateSelector).content.cloneNode(true);
@@ -342,13 +350,89 @@ var renderDialogPanel = function (ad, templateSelector, destPanelSelector, title
 };
 
 
+var selectedAdIndex = -1;
+
+var showDialog = function () {
+  renderDialogPanel(ads[selectedAdIndex]);
+
+  document.querySelector('.dialog').classList.remove('hidden');
+
+  document.addEventListener('keydown', onDocumentKeyDownWhenDialogOpened);
+};
+
+
+var hideDialog = function () {
+  var selectedPinElement = (selectedAdIndex !== -1) ? pinElements[selectedAdIndex] : null;
+
+  if (selectedPinElement) {
+    selectedPinElement.classList.remove('pin--active');
+
+    selectedAdIndex = -1;
+  }
+
+  document.querySelector('.dialog').classList.add('hidden');
+
+  document.removeEventListener('keydown', onDocumentKeyDownWhenDialogOpened);
+};
+
+
+var onDocumentKeyDownWhenDialogOpened = function (evt) {
+  if (evt.keyCode === VK_ESC) {
+    hideDialog();
+  }
+};
+
+
+var selectPin = function (pinElementToSelect) {
+  var selectedPinElement = (selectedAdIndex !== -1) ? pinElements[selectedAdIndex] : null;
+
+  if (selectedPinElement !== pinElementToSelect) {
+    if (selectedPinElement) {
+      selectedPinElement.classList.remove('pin--active');
+    }
+
+    selectedPinElement = pinElementToSelect;
+
+    selectedAdIndex = pinElements.indexOf(selectedPinElement);
+
+    selectedPinElement.classList.add('pin--active');
+
+    showDialog();
+  }
+};
+
+
+var onPinElementClick = function (evt) {
+  selectPin(evt.currentTarget);
+};
+
+var onPinElementKeyDown = function (evt) {
+  if (evt.keyCode === VK_ENTER) {
+    selectPin(evt.currentTarget);
+  }
+};
+
+
+var onDialogCloseClick = function () {
+  hideDialog();
+};
+
+
 var AD_COUNT = 8;
 
 var ads = createAds(AD_COUNT);
 
 var pinElements = createPinElements(ads);
 
+var i;
+
 addElementsToHTML(pinElements, document.querySelector('.tokyo__pin-map'));
 
-renderDialogPanel(ads[0], '#lodge-template', '.dialog__panel', '.dialog__title');
+selectPin(pinElements[0]);
 
+for (i = 0; i < pinElements.length; i++) {
+  pinElements[i].addEventListener('click', onPinElementClick);
+  pinElements[i].addEventListener('keydown', onPinElementKeyDown);
+}
+
+document.querySelector('.dialog__close').addEventListener('click', onDialogCloseClick);
