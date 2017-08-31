@@ -74,4 +74,3 @@ window.utils = (function () {
     isEnterPressed: isEnterPressed
   };
 })();
-
