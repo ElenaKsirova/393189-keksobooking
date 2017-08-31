@@ -63,4 +63,6 @@ window.kbMap = (function () {
   }
 
   document.querySelector('.dialog__close').addEventListener('click', onCardCloseClick);
+
+  return {};
 })();
