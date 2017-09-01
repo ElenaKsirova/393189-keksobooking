@@ -93,6 +93,13 @@ window.kbForm = (function () {
   });
 
 
+  var address = document.querySelector('#address');
+
+  var setAddress = function (newAddress) {
+    address.value = newAddress;
+  };
+
+
   var form = document.querySelector('.notice__form');
   var formSubmit = document.querySelector('.form__submit');
 
@@ -100,5 +107,8 @@ window.kbForm = (function () {
     form.reset();
   });
 
-  return {};
+
+  return {
+    setAddress: setAddress
+  };
 })();

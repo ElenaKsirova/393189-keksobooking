@@ -1,22 +1,22 @@
 'use strict';
 
 window.kbPin = (function () {
+  var PIN_WIDTH = 40;
+  var PIN_HEIGHT = 40;
+
   // createPinElement:
   //   <div class="pin" style="left: {{location.x}}px; top: {{location.y}}px">
   //     <img src="{{author.avatar}}" class="rounded" width="40" height="40">
   //   </div>
 
   var createPinElement = function (ad) {
-    var PIN_WIDTH = 40;
-    var PIN_HEIGHT = 40;
-
     var newDiv = document.createElement('div');
 
-    var left = ad.location.x - (PIN_WIDTH / 2);
-    var top = ad.location.y - PIN_HEIGHT;
+    var pinCoords = getPinCoordsByLocation(ad.location);
 
     newDiv.className = 'pin';
-    newDiv.style = 'left: ' + left + 'px; top: ' + top + 'px';
+    newDiv.style.left = pinCoords.left + 'px';
+    newDiv.style.top = pinCoords.top + 'px';
     newDiv.tabIndex = 0;
 
 
@@ -74,9 +74,27 @@ window.kbPin = (function () {
   };
 
 
+  var getLocationByPinCoords = function (pinElement) {
+    return {
+      x: +((pinElement.style.left).replace('px', '')) + (PIN_WIDTH / 2),
+      y: +((pinElement.style.top).replace('px', '')) + PIN_HEIGHT
+    };
+  };
+
+
+  var getPinCoordsByLocation = function (location) {
+    return {
+      left: location.x - (PIN_WIDTH / 2),
+      top: location.y - PIN_HEIGHT
+    };
+  };
+
+
   return {
     createPinElements: createPinElements,
     selectPin: selectPin,
-    unselectPin: unselectPin
+    unselectPin: unselectPin,
+    getLocationByPinCoords: getLocationByPinCoords,
+    getPinCoordsByLocation: getPinCoordsByLocation
   };
 })();

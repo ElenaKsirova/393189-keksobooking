@@ -1,6 +1,12 @@
 'use strict';
 
 window.kbData = (function () {
+  var LOCATION_X_MIN = 300;
+  var LOCATION_X_MAX = 900;
+
+  var LOCATION_Y_MIN = 100;
+  var LOCATION_Y_MAX = 500;
+
   var getRandomFromRange = window.utils.getRandomFromRange;
   var getRandomItem = window.utils.getRandomItem;
   var getRandomList = window.utils.getRandomList;
@@ -169,8 +175,8 @@ window.kbData = (function () {
 
       var offerRooms = Math.round(getRandomFromRange(1, 5));
 
-      var locationX = Math.round(getRandomFromRange(300, 900));
-      var locationY = Math.round(getRandomFromRange(100, 500));
+      var locationX = Math.round(getRandomFromRange(LOCATION_X_MIN, LOCATION_X_MAX));
+      var locationY = Math.round(getRandomFromRange(LOCATION_Y_MIN, LOCATION_Y_MAX));
 
       newAds[i] = {
         'author': {
@@ -199,6 +205,16 @@ window.kbData = (function () {
   };
 
   return {
+    locationLimits: {
+      x: {
+        min: LOCATION_X_MIN,
+        max: LOCATION_X_MAX
+      },
+      y: {
+        min: LOCATION_Y_MIN,
+        max: LOCATION_Y_MAX
+      }
+    },
     getOfferTypeCaption: getOfferTypeCaption,
     createAds: createAds
   };
