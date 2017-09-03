@@ -4,6 +4,16 @@ window.utils = (function () {
   var VK_ENTER = 13;
   var VK_ESC = 27;
 
+  var getLimitedValue = function (value, min, max) {
+    if (+value < +min) {
+      return min;
+    } else if (+value > +max) {
+      return max;
+    } else {
+      return value;
+    }
+  };
+
   var getRandomFromRange = function (min, max) {
     return (Math.random() * (max - min) + min);
   };
@@ -65,6 +75,7 @@ window.utils = (function () {
 
 
   return {
+    getLimitedValue: getLimitedValue,
     getRandomFromRange: getRandomFromRange,
     getRandomItem: getRandomItem,
     getRandomList: getRandomList,
