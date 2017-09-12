@@ -7,15 +7,36 @@ window.kbData = (function () {
   var LOCATION_Y_MIN = 100;
   var LOCATION_Y_MAX = 500;
 
-  var getRandomFromRange = window.utils.getRandomFromRange;
-  var getRandomItem = window.utils.getRandomItem;
-  var getRandomList = window.utils.getRandomList;
+  var CHECK_IN_TIMES = ['12:00', '13:00', '14:00'];
+  var CHECK_OUT_TIMES = ['12:00', '13:00', '14:00'];
 
-  var OFFER_CAPTIONS_TO_TYPES = [
-    ['квартира', 'flat'],
-    ['домик', 'house'],
-    ['бунгало', 'bungalo'],
-    ['дворец', 'palace']
+  var OFFER_TYPES = [
+    'flat',
+    'house',
+    'bungalo',
+    'palace'
+  ];
+
+  var OFFER_MIN_PRICES = [
+    1000,
+    5000,
+    0,
+    10000
+  ];
+
+  var OFFER_TYPE_CAPTIONS = [
+    'квартира',
+    'домик',
+    'бунгало',
+    'дворец',
+  ];
+
+  var OFFER_ROOM_NUMBERS = [
+    '1', '2', '3', '100'
+  ];
+
+  var OFFER_CAPACITY = [
+    '1', '2', '3', '0'
   ];
 
   var OFFER_FEATURES = [
@@ -27,12 +48,18 @@ window.kbData = (function () {
     'conditioner'
   ];
 
+
+  var getRandomFromRange = window.utils.getRandomFromRange;
+  var getRandomItem = window.utils.getRandomItem;
+  var getRandomList = window.utils.getRandomList;
+
+
   var getOfferTypeByTitle = function (offerTitle) {
     offerTitle = offerTitle.toLowerCase();
 
-    for (var i = 0; i < OFFER_CAPTIONS_TO_TYPES.length; i++) {
-      if (offerTitle.indexOf(OFFER_CAPTIONS_TO_TYPES[i][0]) !== -1) {
-        return OFFER_CAPTIONS_TO_TYPES[i][1];
+    for (var i = 0; i < OFFER_TYPE_CAPTIONS.length; i++) {
+      if (offerTitle.indexOf(OFFER_TYPE_CAPTIONS[i]) !== -1) {
+        return OFFER_TYPES[i];
       }
     }
 
@@ -41,13 +68,11 @@ window.kbData = (function () {
 
 
   var getOfferTypeCaption = function (offerType) {
-    for (var i = 0; i < OFFER_CAPTIONS_TO_TYPES.length; i++) {
-      if (offerType === OFFER_CAPTIONS_TO_TYPES[i][1]) {
-        return OFFER_CAPTIONS_TO_TYPES[i][0];
-      }
-    }
+    var offerTypeIndex = OFFER_TYPES.indexOf(offerType);
 
-    return offerType;
+    return (
+      (offerTypeIndex !== -1) ? OFFER_TYPE_CAPTIONS[offerTypeIndex] : offerType
+    );
   };
 
 
@@ -190,7 +215,7 @@ window.kbData = (function () {
           'type': offerType,
           'rooms': offerRooms,
           'guests': getRandomOfferGuests(offerType, offerRooms),
-          'checkin': getRandomItem(['12:00', '13:00', '14:00']),
+          'checkin': getRandomItem(CHECK_IN_TIMES),
           'checkout': getRandomItem(['12:00', '13:00', '14:00']),
           'features': getRandomList(OFFER_FEATURES),
           'description': '',
@@ -215,6 +240,12 @@ window.kbData = (function () {
         max: LOCATION_Y_MAX
       }
     },
+    checkInTimes: CHECK_IN_TIMES,
+    checkOutTimes: CHECK_OUT_TIMES,
+    offerTypes: OFFER_TYPES,
+    offerMinPrices: OFFER_MIN_PRICES,
+    offerRoomNumbers: OFFER_ROOM_NUMBERS,
+    offerCapacity: OFFER_CAPACITY,
     getOfferTypeCaption: getOfferTypeCaption,
     createAds: createAds
   };
