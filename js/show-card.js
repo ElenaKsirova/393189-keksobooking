@@ -47,7 +47,9 @@ window.showCard = function (ads, pinElements) {
   };
 
 
-  selectPinAndShowCard(pinElements[0]);
+  if (ads && ads.length) {
+    selectPinAndShowCard(pinElements[0]);
+  }
 
   for (var i = 0; i < pinElements.length; i++) {
     pinElements[i].addEventListener('click', onPinElementClick);

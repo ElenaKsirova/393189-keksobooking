@@ -1,74 +1,77 @@
 'use strict';
 
 window.map = (function () {
-  var ads = window.data.loadAds();
+  window.backend.load(
+    function (ads) {
+      var pinElements = window.pin.createPinElements(ads);
 
-  var pinElements = window.pin.createPinElements(ads);
+      var mainPinElement = document.querySelector('.pin__main');
 
-  var mainPinElement = document.querySelector('.pin__main');
+      var pinMap = document.querySelector('.tokyo__pin-map');
 
-  var pinMap = document.querySelector('.tokyo__pin-map');
+      window.utils.addElementsToHTML(pinElements, pinMap);
 
-  window.utils.addElementsToHTML(pinElements, pinMap);
+      window.showCard(ads, pinElements);
 
-  window.showCard(ads, pinElements);
+      var locationLimits = window.data.locationLimits;
 
-  var locationLimits = window.data.locationLimits;
-
-  var pinCoordsLimits = {
-    min: window.pin.getPinCoordsByLocation({x: locationLimits.x.min, y: locationLimits.y.min}),
-    max: window.pin.getPinCoordsByLocation({x: locationLimits.x.max, y: locationLimits.y.max})
-  };
-
-
-  mainPinElement.addEventListener('mousedown', function (evt) {
-    evt.preventDefault();
-
-    var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
-    };
-
-    var onMouseMove = function (moveEvt) {
-      moveEvt.preventDefault();
-
-      var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
-      };
-
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
+      var pinCoordsLimits = {
+        min: window.pin.getPinCoordsByLocation({x: locationLimits.x.min, y: locationLimits.y.min}),
+        max: window.pin.getPinCoordsByLocation({x: locationLimits.x.max, y: locationLimits.y.max})
       };
 
 
-      var newLeft = (mainPinElement.offsetLeft - shift.x);
-      newLeft = window.utils.getLimitedValue(newLeft, pinCoordsLimits.min.left, pinCoordsLimits.max.left);
+      mainPinElement.addEventListener('mousedown', function (evt) {
+        evt.preventDefault();
 
-      var newTop = (mainPinElement.offsetTop - shift.y);
-      newTop = window.utils.getLimitedValue(newTop, pinCoordsLimits.min.top, pinCoordsLimits.max.top);
+        var startCoords = {
+          x: evt.clientX,
+          y: evt.clientY
+        };
 
-      mainPinElement.style.left = newLeft + 'px';
-      mainPinElement.style.top = newTop + 'px';
+        var onMouseMove = function (moveEvt) {
+          moveEvt.preventDefault();
+
+          var shift = {
+            x: startCoords.x - moveEvt.clientX,
+            y: startCoords.y - moveEvt.clientY
+          };
+
+          startCoords = {
+            x: moveEvt.clientX,
+            y: moveEvt.clientY
+          };
 
 
-      var newLocation = window.pin.getLocationByPinCoords(mainPinElement);
+          var newLeft = (mainPinElement.offsetLeft - shift.x);
+          newLeft = window.utils.getLimitedValue(newLeft, pinCoordsLimits.min.left, pinCoordsLimits.max.left);
 
-      window.form.setAddress('x: ' + newLocation.x + ', y: ' + newLocation.y);
-    };
+          var newTop = (mainPinElement.offsetTop - shift.y);
+          newTop = window.utils.getLimitedValue(newTop, pinCoordsLimits.min.top, pinCoordsLimits.max.top);
+
+          mainPinElement.style.left = newLeft + 'px';
+          mainPinElement.style.top = newTop + 'px';
 
 
-    var onMouseUp = function (upEvt) {
-      upEvt.preventDefault();
+          var newLocation = window.pin.getLocationByPinCoords(mainPinElement);
 
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
+          window.form.setAddress('x: ' + newLocation.x + ', y: ' + newLocation.y);
+        };
 
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  });
+
+        var onMouseUp = function (upEvt) {
+          upEvt.preventDefault();
+
+          document.removeEventListener('mousemove', onMouseMove);
+          document.removeEventListener('mouseup', onMouseUp);
+        };
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+      });
+    },
+    window.error.errorHandler
+  );
 
   return {};
 })();
