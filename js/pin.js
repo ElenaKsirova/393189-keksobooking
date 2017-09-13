@@ -1,6 +1,6 @@
 'use strict';
 
-window.kbPin = (function () {
+window.pin = (function () {
   var PIN_WIDTH = 40;
   var PIN_HEIGHT = 40;
 
@@ -74,6 +74,27 @@ window.kbPin = (function () {
   };
 
 
+  var showPin = function (pinElement) {
+    pinElement.classList.remove('hidden');
+  };
+
+
+  var hidePin = function (pinElement) {
+    pinElement.classList.add('hidden');
+  };
+
+
+  var filterPins = function (ads, pinElements, callback) {
+    for (var i = 0; i < pinElements.length; i++) {
+      if (callback(ads[i])) {
+        showPin(pinElements[i]);
+      } else {
+        hidePin(pinElements[i]);
+      }
+    }
+  };
+
+
   var getLocationByPinCoords = function (pinElement) {
     return {
       x: +((pinElement.style.left).replace('px', '')) + (PIN_WIDTH / 2),
@@ -94,6 +115,7 @@ window.kbPin = (function () {
     createPinElements: createPinElements,
     selectPin: selectPin,
     unselectPin: unselectPin,
+    filterPins: filterPins,
     getLocationByPinCoords: getLocationByPinCoords,
     getPinCoordsByLocation: getPinCoordsByLocation
   };

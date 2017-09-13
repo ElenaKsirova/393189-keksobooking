@@ -1,6 +1,6 @@
 'use strict';
 
-window.kbForm = (function () {
+window.form = (function () {
   function syncValues(element, value) {
     element.value = value;
   }
@@ -14,8 +14,10 @@ window.kbForm = (function () {
   var timeIn = document.querySelector('#timein');
   var timeOut = document.querySelector('#timeout');
 
+  var data = window.data;
+
   window.synchronizeFields(
-      timeIn, timeOut, window.kbData.checkInTimes, window.kbData.checkOutTimes, syncValues
+      timeIn, timeOut, data.checkInTimes, data.checkOutTimes, syncValues
   );
 
 
@@ -23,7 +25,7 @@ window.kbForm = (function () {
   var offerPrice = document.querySelector('#price');
 
   window.synchronizeFields(
-      offerPrice, offerType, window.kbData.offerMinPrices, window.kbData.offerTypes, syncValueWithMin,
+      offerPrice, offerType, data.offerMinPrices, data.offerTypes, syncValueWithMin,
       false /* sync one way */
   );
 
@@ -32,7 +34,7 @@ window.kbForm = (function () {
   var capacity = document.querySelector('#capacity');
 
   window.synchronizeFields(
-      capacity, roomNumber, window.kbData.offerCapacity, window.kbData.offerRoomNumbers, syncValues
+      capacity, roomNumber, data.offerCapacity, data.offerRoomNumbers, syncValues
   );
 
 
@@ -44,10 +46,15 @@ window.kbForm = (function () {
 
 
   var form = document.querySelector('.notice__form');
-  var formSubmit = document.querySelector('.form__submit');
 
-  formSubmit.addEventListener('submit', function () {
-    form.reset();
+  form.addEventListener('submit', function (evt) {
+    var successHandler = function () {
+      form.reset();
+    };
+
+    evt.preventDefault();
+
+    window.backend.save(new FormData(form), successHandler, window.error.errorHandler);
   });
 
 

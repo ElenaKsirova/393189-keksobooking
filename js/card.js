@@ -1,6 +1,6 @@
 'use strict';
 
-window.kbCard = (function () {
+window.card = (function () {
   var renderCard = function (ad) {
     var templateSelector = '#lodge-template';
     var destPanelSelector = '.dialog__panel';
@@ -20,7 +20,7 @@ window.kbCard = (function () {
     var offer = ad.offer;
 
     var offerType = window.utils.capitalizeFirstLetter(
-        window.kbData.getOfferTypeCaption(offer.type)
+        window.data.getOfferTypeCaption(offer.type)
     );
 
     var featuresDiv = newPanel.querySelector('.lodge__features');

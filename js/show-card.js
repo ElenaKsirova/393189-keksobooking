@@ -4,10 +4,10 @@ window.showCard = function (ads, pinElements) {
   var selectedAdIndex = -1;
 
   var selectPinAndShowCard = function (pinToSelect) {
-    selectedAdIndex = window.kbPin.selectPin(pinElements, selectedAdIndex, pinToSelect);
+    selectedAdIndex = window.pin.selectPin(pinElements, selectedAdIndex, pinToSelect);
 
     if (selectedAdIndex !== -1) {
-      window.kbCard.showCard(ads[selectedAdIndex]);
+      window.card.showCard(ads[selectedAdIndex]);
 
       document.addEventListener('keydown', onDocumentKeyDownWhenCardOpened);
     }
@@ -27,9 +27,9 @@ window.showCard = function (ads, pinElements) {
 
 
   var hideCardAndUnselectPin = function () {
-    window.kbCard.hideCard();
+    window.card.hideCard();
 
-    selectedAdIndex = window.kbPin.unselectPin(pinElements, selectedAdIndex);
+    selectedAdIndex = window.pin.unselectPin(pinElements, selectedAdIndex);
 
     document.removeEventListener('keydown', onDocumentKeyDownWhenCardOpened);
   };
@@ -47,7 +47,9 @@ window.showCard = function (ads, pinElements) {
   };
 
 
-  selectPinAndShowCard(pinElements[0]);
+  if (ads && ads.length) {
+    selectPinAndShowCard(pinElements[0]);
+  }
 
   for (var i = 0; i < pinElements.length; i++) {
     pinElements[i].addEventListener('click', onPinElementClick);
