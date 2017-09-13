@@ -1,6 +1,6 @@
 'use strict';
 
-window.kbPin = (function () {
+window.pin = (function () {
   var PIN_WIDTH = 40;
   var PIN_HEIGHT = 40;
 

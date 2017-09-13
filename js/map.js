@@ -1,11 +1,9 @@
 'use strict';
 
-window.kbMap = (function () {
-  var AD_COUNT = 8;
+window.map = (function () {
+  var ads = window.data.loadAds();
 
-  var ads = window.kbData.createAds(AD_COUNT);
-
-  var pinElements = window.kbPin.createPinElements(ads);
+  var pinElements = window.pin.createPinElements(ads);
 
   var mainPinElement = document.querySelector('.pin__main');
 
@@ -15,11 +13,11 @@ window.kbMap = (function () {
 
   window.showCard(ads, pinElements);
 
-  var locationLimits = window.kbData.locationLimits;
+  var locationLimits = window.data.locationLimits;
 
   var pinCoordsLimits = {
-    min: window.kbPin.getPinCoordsByLocation({x: locationLimits.x.min, y: locationLimits.y.min}),
-    max: window.kbPin.getPinCoordsByLocation({x: locationLimits.x.max, y: locationLimits.y.max})
+    min: window.pin.getPinCoordsByLocation({x: locationLimits.x.min, y: locationLimits.y.min}),
+    max: window.pin.getPinCoordsByLocation({x: locationLimits.x.max, y: locationLimits.y.max})
   };
 
 
@@ -55,9 +53,9 @@ window.kbMap = (function () {
       mainPinElement.style.top = newTop + 'px';
 
 
-      var newLocation = window.kbPin.getLocationByPinCoords(mainPinElement);
+      var newLocation = window.pin.getLocationByPinCoords(mainPinElement);
 
-      window.kbForm.setAddress('x: ' + newLocation.x + ', y: ' + newLocation.y);
+      window.form.setAddress('x: ' + newLocation.x + ', y: ' + newLocation.y);
     };
 
 
@@ -71,7 +69,6 @@ window.kbMap = (function () {
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });
-
 
   return {};
 })();
