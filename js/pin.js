@@ -85,7 +85,7 @@ window.pin = (function () {
 
 
   var filterPins = function (ads, pinElements, callback) {
-    for(var i = 0; i < pinElements.length; i++) {
+    for (var i = 0; i < pinElements.length; i++) {
       if (callback(ads[i])) {
         showPin(pinElements[i]);
       } else {
