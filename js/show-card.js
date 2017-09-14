@@ -3,6 +3,7 @@
 window.showCard = function (ads, pinElements) {
   var selectedAdIndex = -1;
 
+
   var selectPinAndShowCard = function (pinToSelect) {
     selectedAdIndex = window.pin.selectPin(pinElements, selectedAdIndex, pinToSelect);
 
@@ -23,6 +24,15 @@ window.showCard = function (ads, pinElements) {
     window.utils.isEnterPressed(evt, function () {
       selectPinAndShowCard(evt.currentTarget);
     });
+  };
+
+
+  var onPinElementHide = function (evt) {
+    if (selectedAdIndex !== -1) {
+      if (evt.currentTarget === pinElements[selectedAdIndex]) {
+        hideCardAndUnselectPin();
+      }
+    }
   };
 
 
@@ -54,6 +64,7 @@ window.showCard = function (ads, pinElements) {
   for (var i = 0; i < pinElements.length; i++) {
     pinElements[i].addEventListener('click', onPinElementClick);
     pinElements[i].addEventListener('keydown', onPinElementKeyDown);
+    pinElements[i].addEventListener('hide', onPinElementHide);
   }
 
   document.querySelector('.dialog__close').addEventListener('click', onCardCloseClick);

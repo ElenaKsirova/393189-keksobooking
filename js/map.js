@@ -13,6 +13,15 @@ window.map = (function () {
 
         window.showCard(ads, pinElements);
 
+        var updatePins = function () {
+          window.pin.filterPins(ads, pinElements, window.filter.filterAd);
+        };
+
+        updatePins();
+
+        window.filter.setOnChange(updatePins);
+
+
         var locationLimits = window.data.locationLimits;
 
         var pinCoordsLimits = {
