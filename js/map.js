@@ -5,8 +5,14 @@ window.map = (function () {
       function (ads) {
         var pinElements = window.pin.createPinElements(ads);
 
+
         var mainPinElement = document.querySelector('.pin__main');
         var mainPinStartCoords = {left: mainPinElement.style.left, top: mainPinElement.style.top};
+
+        var mainPinStartLocation = window.pin.getLocationByPinCoords(mainPinElement);
+
+        window.form.setAddress('x: ' + mainPinStartLocation.x + ', y: ' + mainPinStartLocation.y);
+
 
         var pinMapElement = document.querySelector('.tokyo__pin-map');
 
@@ -97,13 +103,8 @@ window.map = (function () {
 
       function (errorMessage) {
         var divElement = document.createElement('div');
-        divElement.style = 'z-index: 10000; margin: 0 auto; padding: 15px; text-align: center; background-color: black; border: 3px solid red; border-radius: 3px;';
-        divElement.style.position = 'absolute';
-        divElement.style.left = 0;
-        divElement.style.right = 0;
-        divElement.style.fontSize = '30px';
-        divElement.style.fontFamily = 'Arial, Tahoma';
-        divElement.style.color = 'red';
+
+        divElement.classList.add('loading-ads-error-msg');
 
         divElement.textContent = errorMessage;
         document.body.insertAdjacentElement('afterbegin', divElement);

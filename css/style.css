@@ -665,3 +665,37 @@ select option:hover {
 .rounded {
     border-radius: 50%;
 }
+
+.loading-ads-error-msg {
+  z-index: 10000;
+  margin: 0 auto;
+  padding: 15px;
+  text-align: center;
+  background-color: white;
+  border: 3px solid red;
+  border-radius: 3px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  font-size: 30px;
+  font-family: Arial, Tahoma;
+  color: red;
+}
+
+.saving-form-error-msg {
+  z-index: 10000;
+  margin: 0 auto;
+  width: 960px;
+  box-sizing: border-box;
+  padding: 33px;
+  text-align: center;
+  background-color: white;
+  border: 2px dashed red;
+  border-radius: 2px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  font-size: 16px;
+  font-family: Arial, Tahoma;
+  color: red;
+}
