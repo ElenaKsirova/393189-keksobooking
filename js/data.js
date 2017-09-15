@@ -18,7 +18,7 @@ window.data = (function () {
 
   var OFFER_MIN_PRICES = [
     1000,
-    5000,
+    10000,
     0
   ];
 
