@@ -49,19 +49,6 @@ window.data = (function () {
   };
 
 
-  var loadAds = function () {
-    var newAds = [];
-
-    var successHandler = function (ads) {
-      newAds = newAds.concat(ads);
-    };
-
-    window.backend.load(successHandler, window.error.errorHandler);
-
-    return newAds;
-  };
-
-
   return {
     locationLimits: {
       x: {
@@ -79,7 +66,6 @@ window.data = (function () {
     offerMinPrices: OFFER_MIN_PRICES,
     offerRoomNumbers: OFFER_ROOM_NUMBERS,
     offerCapacity: OFFER_CAPACITY,
-    getOfferTypeCaption: getOfferTypeCaption,
-    loadAds: loadAds
+    getOfferTypeCaption: getOfferTypeCaption
   };
 })();

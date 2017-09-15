@@ -81,12 +81,16 @@ window.pin = (function () {
 
   var hidePin = function (pinElement) {
     pinElement.classList.add('hidden');
+
+    var hideEvent = new Event('hide');
+
+    pinElement.dispatchEvent(hideEvent);
   };
 
 
-  var filterPins = function (ads, pinElements, callback) {
+  var filterPins = function (ads, pinElements, filterFunction) {
     for (var i = 0; i < pinElements.length; i++) {
-      if (callback(ads[i])) {
+      if (filterFunction(ads[i])) {
         showPin(pinElements[i]);
       } else {
         hidePin(pinElements[i]);
