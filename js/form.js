@@ -115,13 +115,7 @@ window.form = (function () {
 
       var divElement = document.createElement('div');
 
-      divElement.style = 'z-index: 10000; margin: 0 auto; width: 960px; box-sizing: border-box; padding: 33px; text-align: center; background-color: white; border: 2px dashed red; border-radius: 2px;';
-      divElement.style.position = 'absolute';
-      divElement.style.left = 0;
-      divElement.style.right = 0;
-      divElement.style.fontSize = '16px';
-      divElement.style.fontFamily = 'Arial, Tahoma';
-      divElement.style.color = 'red';
+      divElement.classList.add('saving-form-error-msg');
 
       divElement.textContent = 'Сервер не принял форму. ' + errorMessage + '. Нажмите, чтобы закрыть сообщение';
 
