@@ -1,64 +1,145 @@
 'use strict';
 
 window.form = (function () {
-  function syncValues(element, value) {
+  var syncValues = function (element, value) {
     element.value = value;
-  }
+  };
 
-  function syncValueWithMin(element, value) {
+  var syncValueWithMin = function (element, value) {
     element.min = value;
     element.placeholder = value;
-  }
+  };
 
 
-  var timeIn = document.querySelector('#timein');
-  var timeOut = document.querySelector('#timeout');
+  var timeInElement = document.querySelector('#timein');
+  var timeOutElement = document.querySelector('#timeout');
 
   var data = window.data;
 
   window.synchronizeFields(
-      timeIn, timeOut, data.checkInTimes, data.checkOutTimes, syncValues
+      timeInElement, timeOutElement, data.checkInTimes, data.checkOutTimes, syncValues
   );
 
 
-  var offerType = document.querySelector('#type');
-  var offerPrice = document.querySelector('#price');
+  var offerTypeElement = document.querySelector('#type');
+  var offerPriceElement = document.querySelector('#price');
 
   window.synchronizeFields(
-      offerPrice, offerType, data.offerMinPrices, data.offerTypes, syncValueWithMin,
+      offerPriceElement, offerTypeElement, data.offerMinPrices, data.offerTypes, syncValueWithMin,
       false /* sync one way */
   );
 
 
-  var roomNumber = document.querySelector('#room_number');
-  var capacity = document.querySelector('#capacity');
+  var roomNumberElement = document.querySelector('#room_number');
+  var capacityElement = document.querySelector('#capacity');
 
-  window.synchronizeFields(
-      capacity, roomNumber, data.offerCapacity, data.offerRoomNumbers, syncValues
-  );
+  roomNumberElement.addEventListener('change', function () {
+    switch (roomNumberElement.value) {
+      case '1':
+        capacityElement.value = '1';
+        break;
+
+      case '2':
+        if ((capacityElement.value !== '1') && (capacityElement.value !== '2')) {
+          capacityElement.value = '2';
+        }
+        break;
+
+      case '3':
+        if ((capacityElement.value !== '1') && (capacityElement.value !== '2') && (capacityElement.value !== '3')) {
+          capacityElement.value = '3';
+        }
+        break;
+
+      case '100':
+        capacityElement.value = '0';
+        break;
+    }
+  });
 
 
-  var address = document.querySelector('#address');
+  capacityElement.addEventListener('change', function () {
+    switch (capacityElement.value) {
+      case '0':
+        roomNumberElement.value = '100';
+        break;
+
+      case '1':
+        if (roomNumberElement.value === '100') {
+          roomNumberElement.value = '1';
+        }
+        break;
+
+      case '2':
+        if ((roomNumberElement.value !== '2') && (roomNumberElement.value !== '3')) {
+          roomNumberElement.value = '2';
+        }
+        break;
+
+      case '3':
+        if (roomNumberElement.value !== '3') {
+          roomNumberElement.value = '3';
+        }
+        break;
+    }
+  });
+
+
+  var addressElement = document.querySelector('#address');
 
   var setAddress = function (newAddress) {
-    address.value = newAddress;
+    addressElement.value = newAddress;
   };
 
 
-  var form = document.querySelector('.notice__form');
+  var onReset = null;
 
-  form.addEventListener('submit', function (evt) {
+  var setOnReset = function (onResetToSet) {
+    onReset = onResetToSet;
+  };
+
+
+  var formElement = document.querySelector('.notice__form');
+
+  formElement.addEventListener('submit', function (evt) {
     var successHandler = function () {
-      form.reset();
+      formElement.reset();
+
+      if (onReset) {
+        onReset();
+      }
+    };
+
+    var errorHandler = function (errorMessage) {
+      var adTitleElement = document.querySelector('.notice__header');
+
+      var divElement = document.createElement('div');
+
+      divElement.style = 'z-index: 10000; margin: 0 auto; width: 960px; box-sizing: border-box; padding: 33px; text-align: center; background-color: white; border: 2px dashed red; border-radius: 2px;';
+      divElement.style.position = 'absolute';
+      divElement.style.left = 0;
+      divElement.style.right = 0;
+      divElement.style.fontSize = '16px';
+      divElement.style.fontFamily = 'Arial, Tahoma';
+      divElement.style.color = 'red';
+
+      divElement.textContent = 'Сервер не принял форму. ' + errorMessage + '. Нажмите, чтобы закрыть сообщение';
+
+      adTitleElement.insertAdjacentElement('afterbegin', divElement);
+
+      divElement.addEventListener('click', function (divElementEvt) {
+        divElementEvt.currentTarget.remove();
+      });
     };
 
     evt.preventDefault();
 
-    window.backend.save(new FormData(form), successHandler, window.error.errorHandler);
+    window.backend.save(new FormData(formElement), successHandler, errorHandler);
   });
 
 
   return {
-    setAddress: setAddress
+    setAddress: setAddress,
+    setOnReset: setOnReset
   };
 })();

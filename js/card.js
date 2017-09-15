@@ -6,16 +6,18 @@ window.card = (function () {
     var destPanelSelector = '.dialog__panel';
     var titleSelector = '.dialog__title';
 
-    var RUBLE_SIGN = '&#x20bd;';
+    var RUBLE_SIGN = '₽';
 
-    var newPanel = document.querySelector(templateSelector).content.cloneNode(true);
+    var newPanelElement = document.querySelector(templateSelector).content.cloneNode(true);
 
     var setField = function (field, content) {
-      newPanel.querySelector('.lodge__' + field).innerHTML = content;
+      var fieldElement = newPanelElement.querySelector('.lodge__' + field);
+
+      fieldElement.textContent = content;
     };
 
 
-    var destPanel = document.querySelector(destPanelSelector);
+    var destPanelElement = document.querySelector(destPanelSelector);
 
     var offer = ad.offer;
 
@@ -23,7 +25,7 @@ window.card = (function () {
         window.data.getOfferTypeCaption(offer.type)
     );
 
-    var featuresDiv = newPanel.querySelector('.lodge__features');
+    var featuresDivElement = newPanelElement.querySelector('.lodge__features');
 
 
     setField('title', offer.title);
@@ -36,12 +38,12 @@ window.card = (function () {
 
 
     for (var i = 0; i < offer.features.length; i++) {
-      var newSpan = document.createElement('span');
+      var newSpanElement = document.createElement('span');
 
-      newSpan.classList.add('feature__image');
-      newSpan.classList.add('feature__image--' + offer.features[i]);
+      newSpanElement.classList.add('feature__image');
+      newSpanElement.classList.add('feature__image--' + offer.features[i]);
 
-      featuresDiv.appendChild(newSpan);
+      featuresDivElement.appendChild(newSpanElement);
     }
 
 
@@ -50,9 +52,9 @@ window.card = (function () {
 
     var fragment = document.createDocumentFragment();
 
-    fragment.appendChild(newPanel);
+    fragment.appendChild(newPanelElement);
 
-    destPanel.parentNode.replaceChild(fragment, destPanel);
+    destPanelElement.parentNode.replaceChild(fragment, destPanelElement);
 
 
     document.querySelector(titleSelector).querySelector('img').src = ad.author.avatar;

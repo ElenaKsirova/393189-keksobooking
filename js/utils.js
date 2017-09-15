@@ -4,6 +4,19 @@ window.utils = (function () {
   var VK_ENTER = 13;
   var VK_ESC = 27;
 
+  var DEBOUNCE_INTERVAL = 500; // ms
+
+  var lastTimeout;
+
+  var debounce = function (fun) {
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
+    }
+
+    lastTimeout = window.setTimeout(fun, DEBOUNCE_INTERVAL);
+  };
+
+
   var getLimitedValue = function (value, min, max) {
     if (+value < +min) {
       return min;
@@ -12,35 +25,6 @@ window.utils = (function () {
     } else {
       return value;
     }
-  };
-
-  var getRandomFromRange = function (min, max) {
-    return (Math.random() * (max - min) + min);
-  };
-
-
-  var getRandomItem = function (arrOfItems) {
-    return arrOfItems[Math.floor(Math.random() * arrOfItems.length)];
-  };
-
-
-  var getRandomList = function (arr) {
-    // сначала случайный список полностью совпадает
-    // с переданным массивом
-
-    var randomList = arr.slice(0, arr.length);
-
-
-    // затем мы удаляем из него случайное количество элементов,
-    // таким образом, получая случайный список элементов из заданного набора
-
-    var countToRemove = Math.floor(Math.random() * arr.length);
-
-    for (var i = 0; i < countToRemove; i++) {
-      randomList.splice(Math.floor(Math.random() * randomList.length), 1);
-    }
-
-    return randomList;
   };
 
 
@@ -75,10 +59,8 @@ window.utils = (function () {
 
 
   return {
+    debounce: debounce,
     getLimitedValue: getLimitedValue,
-    getRandomFromRange: getRandomFromRange,
-    getRandomItem: getRandomItem,
-    getRandomList: getRandomList,
     capitalizeFirstLetter: capitalizeFirstLetter,
     addElementsToHTML: addElementsToHTML,
     isEscPressed: isEscPressed,
