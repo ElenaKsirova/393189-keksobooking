@@ -13,22 +13,19 @@ window.data = (function () {
   var OFFER_TYPES = [
     'flat',
     'house',
-    'bungalo',
-    'palace'
+    'bungalo'
   ];
 
   var OFFER_MIN_PRICES = [
     1000,
     5000,
-    0,
-    10000
+    0
   ];
 
   var OFFER_TYPE_CAPTIONS = [
     'квартира',
     'домик',
-    'бунгало',
-    'дворец',
+    'бунгало'
   ];
 
   var OFFER_ROOM_NUMBERS = [

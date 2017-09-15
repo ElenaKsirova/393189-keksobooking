@@ -3,7 +3,6 @@
 window.showCard = function (ads, pinElements) {
   var selectedAdIndex = -1;
 
-
   var selectPinAndShowCard = function (pinToSelect) {
     selectedAdIndex = window.pin.selectPin(pinElements, selectedAdIndex, pinToSelect);
 

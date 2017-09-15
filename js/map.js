@@ -6,20 +6,35 @@ window.map = (function () {
         var pinElements = window.pin.createPinElements(ads);
 
         var mainPinElement = document.querySelector('.pin__main');
+        var mainPinStartCoords = {left: mainPinElement.style.left, top: mainPinElement.style.top};
 
-        var pinMap = document.querySelector('.tokyo__pin-map');
+        var pinMapElement = document.querySelector('.tokyo__pin-map');
 
-        window.utils.addElementsToHTML(pinElements, pinMap);
+        window.utils.addElementsToHTML(pinElements, pinMapElement);
 
         window.showCard(ads, pinElements);
 
-        var updatePins = function () {
-          window.pin.filterPins(ads, pinElements, window.filter.filterAd);
-        };
 
-        updatePins();
+        window.pin.setupFilters();
 
-        window.filter.setOnChange(updatePins);
+        var numberOfPinsToShowFirst = 3;
+
+        window.pin.filterPins(
+            ads, pinElements,
+            function () {
+              return (numberOfPinsToShowFirst-- > 0);
+            }
+        );
+
+        window.pin.setOnFilterChange(function () {
+          window.pin.filterPins(ads, pinElements, window.pin.filterAds);
+        });
+
+
+        window.form.setOnReset(function () {
+          mainPinElement.style.left = mainPinStartCoords.left;
+          mainPinElement.style.top = mainPinStartCoords.top;
+        });
 
 
         var locationLimits = window.data.locationLimits;
@@ -79,7 +94,20 @@ window.map = (function () {
           document.addEventListener('mouseup', onMouseUp);
         });
       },
-      window.error.errorHandler
+
+      function (errorMessage) {
+        var divElement = document.createElement('div');
+        divElement.style = 'z-index: 10000; margin: 0 auto; padding: 15px; text-align: center; background-color: black; border: 3px solid red; border-radius: 3px;';
+        divElement.style.position = 'absolute';
+        divElement.style.left = 0;
+        divElement.style.right = 0;
+        divElement.style.fontSize = '30px';
+        divElement.style.fontFamily = 'Arial, Tahoma';
+        divElement.style.color = 'red';
+
+        divElement.textContent = errorMessage;
+        document.body.insertAdjacentElement('afterbegin', divElement);
+      }
   );
 
   return {};
