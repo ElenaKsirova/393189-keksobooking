@@ -6,7 +6,7 @@ window.card = (function () {
     var destPanelSelector = '.dialog__panel';
     var titleSelector = '.dialog__title';
 
-    var RUBLE_SIGN = '&#x20bd;';
+    var RUBLE_SIGN = '₽';
 
     var newPanelElement = document.querySelector(templateSelector).content.cloneNode(true);
 
@@ -14,8 +14,6 @@ window.card = (function () {
       var fieldElement = newPanelElement.querySelector('.lodge__' + field);
 
       fieldElement.textContent = content;
-
-      return fieldElement;
     };
 
 
@@ -32,10 +30,7 @@ window.card = (function () {
 
     setField('title', offer.title);
     setField('address', offer.address);
-
-    var offerPriceElement = setField('price', offer.price);
-    offerPriceElement.innerHTML = offerPriceElement.innerHTML + RUBLE_SIGN + '/ночь';
-
+    setField('price', offer.price + RUBLE_SIGN + '/ночь');
     setField('type', offerType);
     setField('rooms-and-guests', 'Для ' + offer.guests + ' гостей в ' + offer.rooms + ' комнатах');
 
