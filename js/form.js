@@ -102,7 +102,9 @@ window.form = (function () {
   var formElement = document.querySelector('.notice__form');
 
   formElement.addEventListener('submit', function (evt) {
-    var successHandler = function () {
+    var adTitleElement = document.querySelector('.notice__header');
+
+    var onSuccess = function () {
       formElement.reset();
 
       if (onReset) {
@@ -110,9 +112,7 @@ window.form = (function () {
       }
     };
 
-    var errorHandler = function (errorMessage) {
-      var adTitleElement = document.querySelector('.notice__header');
-
+    var onError = function (errorMessage) {
       var divElement = document.createElement('div');
 
       divElement.classList.add('saving-form-error-msg');
@@ -128,7 +128,7 @@ window.form = (function () {
 
     evt.preventDefault();
 
-    window.backend.save(new FormData(formElement), successHandler, errorHandler);
+    window.backend.save(new FormData(formElement), onSuccess, onError);
   });
 
 

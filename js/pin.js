@@ -16,19 +16,14 @@ window.pin = (function () {
   var featureFilterElements = filterContainerElement.querySelectorAll('#housing_features input[name="feature"]');
 
 
-  // createPinElement:
-  //   <div class="pin" style="left: {{location.x}}px; top: {{location.y}}px">
-  //     <img src="{{author.avatar}}" class="rounded" width="40" height="40">
-  //   </div>
-
-  var createPinElement = function (ad) {
+  var createElement = function (ad) {
     var divElement = document.createElement('div');
 
-    var pinCoords = getPinCoordsByLocation(ad.location);
+    var coords = getCoordsByLocation(ad.location);
 
     divElement.className = 'pin';
-    divElement.style.left = pinCoords.left + 'px';
-    divElement.style.top = pinCoords.top + 'px';
+    divElement.style.left = coords.left + 'px';
+    divElement.style.top = coords.top + 'px';
     divElement.tabIndex = 0;
 
 
@@ -45,18 +40,14 @@ window.pin = (function () {
   };
 
 
-  var createPinElements = function (ads) {
-    var elements = [];
-
-    for (var i = 0; i < ads.length; i++) {
-      elements[i] = createPinElement(ads[i]);
-    }
-
-    return elements;
+  var createElements = function (ads) {
+    return ads.map(function (ad) {
+      return createElement(ad);
+    });
   };
 
 
-  var selectPin = function (pinElements, selectedPinIndex, pinElementToSelect) {
+  var select = function (pinElements, selectedPinIndex, pinElementToSelect) {
     var selectedPinElement = (selectedPinIndex !== -1) ? pinElements[selectedPinIndex] : null;
 
     if (selectedPinElement !== pinElementToSelect) {
@@ -73,7 +64,7 @@ window.pin = (function () {
   };
 
 
-  var unselectPin = function (pinElements, selectedPinIndex) {
+  var unselect = function (pinElements, selectedPinIndex) {
     var selectedPinElement = (selectedPinIndex !== -1) ? pinElements[selectedPinIndex] : null;
 
     if (selectedPinElement) {
@@ -86,12 +77,12 @@ window.pin = (function () {
   };
 
 
-  var showPin = function (pinElement) {
+  var show = function (pinElement) {
     pinElement.classList.remove('hidden');
   };
 
 
-  var hidePin = function (pinElement) {
+  var hide = function (pinElement) {
     pinElement.classList.add('hidden');
 
     var hideEvent = new Event('hide');
@@ -101,17 +92,17 @@ window.pin = (function () {
 
 
   var filterPins = function (ads, pinElements, filterFunction) {
-    for (var i = 0; i < pinElements.length; i++) {
-      if (filterFunction(ads[i])) {
-        showPin(pinElements[i]);
+    pinElements.forEach(function (pinElement, index) {
+      if (filterFunction(ads[index])) {
+        show(pinElement);
       } else {
-        hidePin(pinElements[i]);
+        hide(pinElement);
       }
-    }
+    });
   };
 
 
-  var getLocationByPinCoords = function (pinElement) {
+  var getLocationByCoords = function (pinElement) {
     return {
       x: +((pinElement.style.left).replace('px', '')) + (PIN_WIDTH / 2),
       y: +((pinElement.style.top).replace('px', '')) + PIN_HEIGHT
@@ -119,7 +110,7 @@ window.pin = (function () {
   };
 
 
-  var getPinCoordsByLocation = function (location) {
+  var getCoordsByLocation = function (location) {
     return {
       left: location.x - (PIN_WIDTH / 2),
       top: location.y - PIN_HEIGHT
@@ -202,7 +193,7 @@ window.pin = (function () {
   };
 
 
-  var filterChangeHandler = function () {
+  var onFilterChangeWrapped = function () {
     if (onFilterChange) {
       window.utils.debounce(onFilterChange);
     }
@@ -210,26 +201,26 @@ window.pin = (function () {
 
 
   var setupFilters = function () {
-    offerTypeFilterElement.addEventListener('change', filterChangeHandler);
+    offerTypeFilterElement.addEventListener('change', onFilterChangeWrapped);
 
-    offerPriceFilterElement.addEventListener('change', filterChangeHandler);
+    offerPriceFilterElement.addEventListener('change', onFilterChangeWrapped);
 
-    roomNumberFilterElement.addEventListener('change', filterChangeHandler);
+    roomNumberFilterElement.addEventListener('change', onFilterChangeWrapped);
 
-    guestsNumberFilterElement.addEventListener('change', filterChangeHandler);
+    guestsNumberFilterElement.addEventListener('change', onFilterChangeWrapped);
 
-    for (var i = 0; i < featureFilterElements.length; i++) {
-      featureFilterElements[i].addEventListener('change', filterChangeHandler);
-    }
+    featureFilterElements.forEach(function (featureFilterElement) {
+      featureFilterElement.addEventListener('change', onFilterChangeWrapped);
+    });
   };
 
 
   return {
-    createPinElements: createPinElements,
-    selectPin: selectPin,
-    unselectPin: unselectPin,
-    getLocationByPinCoords: getLocationByPinCoords,
-    getPinCoordsByLocation: getPinCoordsByLocation,
+    createElements: createElements,
+    select: select,
+    unselect: unselect,
+    getLocationByCoords: getLocationByCoords,
+    getCoordsByLocation: getCoordsByLocation,
     setOnFilterChange: setOnFilterChange,
     setupFilters: setupFilters,
     filterPins: filterPins,
