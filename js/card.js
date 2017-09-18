@@ -1,23 +1,27 @@
 'use strict';
 
 window.card = (function () {
-  var renderCard = function (ad) {
-    var templateSelector = '#lodge-template';
-    var destPanelSelector = '.dialog__panel';
-    var titleSelector = '.dialog__title';
+  var RUBLE_SIGN = '₽';
 
-    var RUBLE_SIGN = '₽';
+  var dialogElement = document.querySelector('.dialog');
+  var templateElement = document.querySelector('#lodge-template');
+  var titleImageElement = document.querySelector('.dialog__title').querySelector('img');
 
-    var newPanelElement = document.querySelector(templateSelector).content.cloneNode(true);
+  var render = function (ad) {
+    // след. селектор нельзя выносить за пределы фунции, иначе ниже parentNode будет равен null
+    var destPanelElement = document.querySelector('.dialog__panel');
+
+    var newPanelElement = templateElement.content.cloneNode(true);
 
     var setField = function (field, content) {
+      // след. селектор можно вынести за пределы функции, но функция setField для конкретного поля
+      // используется всегда ровно 1 раз, делать же оптимизацию, вынося селектор за пределы render нельзя,
+      // т.к. newPanelElement каждый раз новый - см. cloneNode выше
       var fieldElement = newPanelElement.querySelector('.lodge__' + field);
 
       fieldElement.textContent = content;
     };
 
-
-    var destPanelElement = document.querySelector(destPanelSelector);
 
     var offer = ad.offer;
 
@@ -37,17 +41,31 @@ window.card = (function () {
     setField('checkin-time', 'Заезд после ' + offer.checkin + ', выезд до ' + offer.checkout);
 
 
-    for (var i = 0; i < offer.features.length; i++) {
+    offer.features.forEach(function (feature) {
       var newSpanElement = document.createElement('span');
 
       newSpanElement.classList.add('feature__image');
-      newSpanElement.classList.add('feature__image--' + offer.features[i]);
+      newSpanElement.classList.add('feature__image--' + feature);
 
       featuresDivElement.appendChild(newSpanElement);
-    }
+    });
 
 
     setField('description', offer.description);
+
+
+    var lodgePhotosDivElement = newPanelElement.querySelector('.lodge__photos');
+
+    offer.photos.forEach(function (photo) {
+      var newImageElement = document.createElement('img');
+
+      newImageElement.src = photo;
+      newImageElement.width = 52;
+      newImageElement.height = 42;
+      newImageElement.alt = 'Lodge photo';
+
+      lodgePhotosDivElement.appendChild(newImageElement);
+    });
 
 
     var fragment = document.createDocumentFragment();
@@ -57,24 +75,24 @@ window.card = (function () {
     destPanelElement.parentNode.replaceChild(fragment, destPanelElement);
 
 
-    document.querySelector(titleSelector).querySelector('img').src = ad.author.avatar;
+    titleImageElement.src = ad.author.avatar;
   };
 
 
-  var showCard = function (ad) {
-    renderCard(ad);
+  var show = function (ad) {
+    render(ad);
 
-    document.querySelector('.dialog').classList.remove('hidden');
+    dialogElement.classList.remove('hidden');
   };
 
 
-  var hideCard = function () {
-    document.querySelector('.dialog').classList.add('hidden');
+  var hide = function () {
+    dialogElement.classList.add('hidden');
   };
 
 
   return {
-    showCard: showCard,
-    hideCard: hideCard
+    show: show,
+    hide: hide
   };
 })();

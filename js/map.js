@@ -1,15 +1,17 @@
 'use strict';
 
 window.map = (function () {
+  var NUMBER_OF_PINS_TO_SHOW_FIRST = 3;
+
   window.backend.load(
       function (ads) {
-        var pinElements = window.pin.createPinElements(ads);
+        var pinElements = window.pin.createElements(ads);
 
 
         var mainPinElement = document.querySelector('.pin__main');
         var mainPinStartCoords = {left: mainPinElement.style.left, top: mainPinElement.style.top};
 
-        var mainPinStartLocation = window.pin.getLocationByPinCoords(mainPinElement);
+        var mainPinStartLocation = window.pin.getLocationByCoords(mainPinElement);
 
         window.form.setAddress('x: ' + mainPinStartLocation.x + ', y: ' + mainPinStartLocation.y);
 
@@ -23,12 +25,13 @@ window.map = (function () {
 
         window.pin.setupFilters();
 
-        var numberOfPinsToShowFirst = 3;
+
+        var numberOfPins = NUMBER_OF_PINS_TO_SHOW_FIRST;
 
         window.pin.filterPins(
             ads, pinElements,
             function () {
-              return (numberOfPinsToShowFirst-- > 0);
+              return (numberOfPins-- > 0);
             }
         );
 
@@ -40,14 +43,16 @@ window.map = (function () {
         window.form.setOnReset(function () {
           mainPinElement.style.left = mainPinStartCoords.left;
           mainPinElement.style.top = mainPinStartCoords.top;
+
+          window.form.setAddress('x: ' + mainPinStartLocation.x + ', y: ' + mainPinStartLocation.y);
         });
 
 
         var locationLimits = window.data.locationLimits;
 
         var pinCoordsLimits = {
-          min: window.pin.getPinCoordsByLocation({x: locationLimits.x.min, y: locationLimits.y.min}),
-          max: window.pin.getPinCoordsByLocation({x: locationLimits.x.max, y: locationLimits.y.max})
+          min: window.pin.getCoordsByLocation({x: locationLimits.x.min, y: locationLimits.y.min}),
+          max: window.pin.getCoordsByLocation({x: locationLimits.x.max, y: locationLimits.y.max})
         };
 
 
@@ -83,7 +88,7 @@ window.map = (function () {
             mainPinElement.style.top = newTop + 'px';
 
 
-            var newLocation = window.pin.getLocationByPinCoords(mainPinElement);
+            var newLocation = window.pin.getLocationByCoords(mainPinElement);
 
             window.form.setAddress('x: ' + newLocation.x + ', y: ' + newLocation.y);
           };

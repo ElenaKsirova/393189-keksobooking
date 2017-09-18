@@ -18,13 +18,13 @@ window.utils = (function () {
 
 
   var getLimitedValue = function (value, min, max) {
-    if (+value < +min) {
+    if (value < min) {
       return min;
-    } else if (+value > +max) {
+    } else if (value > max) {
       return max;
-    } else {
-      return value;
     }
+
+    return value;
   };
 
 
@@ -36,9 +36,9 @@ window.utils = (function () {
   var addElementsToHTML = function (elements, container) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < elements.length; i++) {
-      fragment.appendChild(elements[i]);
-    }
+    elements.forEach(function (element) {
+      fragment.appendChild(element);
+    });
 
     container.appendChild(fragment);
   };
