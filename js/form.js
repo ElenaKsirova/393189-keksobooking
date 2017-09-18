@@ -92,6 +92,19 @@ window.form = (function () {
   };
 
 
+  var synchronizeAllFields = function () {
+    timeInElement.dispatchEvent(new Event('change'));
+
+    offerTypeElement.dispatchEvent(new Event('change'));
+
+    roomNumberElement.dispatchEvent(new Event('change'));
+
+    capacityElement.dispatchEvent(new Event('change'));
+  };
+
+  synchronizeAllFields();
+
+
   var onReset = null;
 
   var setOnReset = function (onResetToSet) {
@@ -106,6 +119,8 @@ window.form = (function () {
 
     var onSuccess = function () {
       formElement.reset();
+
+      synchronizeAllFields();
 
       if (onReset) {
         onReset();
