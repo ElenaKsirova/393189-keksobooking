@@ -17,7 +17,7 @@ window.form = (function () {
   var data = window.data;
 
   window.synchronizeFields(
-      timeInElement, timeOutElement, data.checkInTimes, data.checkOutTimes, syncValues
+      timeInElement, timeOutElement, data.CHECK_IN_TIMES, data.CHECK_OUT_TIMES, syncValues
   );
 
 
@@ -25,7 +25,7 @@ window.form = (function () {
   var offerPriceElement = document.querySelector('#price');
 
   window.synchronizeFields(
-      offerPriceElement, offerTypeElement, data.offerMinPrices, data.offerTypes, syncValueWithMin,
+      offerPriceElement, offerTypeElement, data.OFFER_MIN_PRICES, data.OFFER_TYPES, syncValueWithMin,
       false /* sync one way */
   );
 
@@ -113,10 +113,9 @@ window.form = (function () {
 
 
   var formElement = document.querySelector('.notice__form');
+  var adTitleElement = document.querySelector('.notice__header');
 
   formElement.addEventListener('submit', function (evt) {
-    var adTitleElement = document.querySelector('.notice__header');
-
     var onSuccess = function () {
       formElement.reset();
 
@@ -125,7 +124,17 @@ window.form = (function () {
       if (onReset) {
         onReset();
       }
+
+      // fix для FF:
+      // https://stackoverflow.com/questions/18171381/red-border-still-appears-on-inputs-after-resetting-an-html-5-form-firefox
+
+      var invalidInputElements = formElement.querySelectorAll(':invalid');
+
+      invalidInputElements.forEach(function (invalidInputElement) {
+        invalidInputElement.style.boxShadow = 'none';
+      });
     };
+
 
     var onError = function (errorMessage) {
       var divElement = document.createElement('div');
@@ -145,6 +154,26 @@ window.form = (function () {
 
     window.backend.save(new FormData(formElement), onSuccess, onError);
   });
+
+
+  var setInputElementValid = function (evt) {
+    var inputElement = evt.target;
+
+    if (inputElement.value.length > 0) {
+      inputElement.classList.remove('invalid-input');
+      inputElement.removeEventListener('input', setInputElementValid);
+    }
+  };
+
+
+  formElement.addEventListener('invalid', function () {
+    var invalidInputElements = formElement.querySelectorAll(':invalid');
+
+    invalidInputElements.forEach(function (invalidInputElement) {
+      invalidInputElement.classList.add('invalid-input');
+      invalidInputElement.addEventListener('input', setInputElementValid);
+    });
+  }, true);
 
 
   return {

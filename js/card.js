@@ -3,25 +3,20 @@
 window.card = (function () {
   var RUBLE_SIGN = '₽';
 
+  var offerDialogElement = document.querySelector('#offer-dialog');
   var dialogElement = document.querySelector('.dialog');
   var templateElement = document.querySelector('#lodge-template');
   var titleImageElement = document.querySelector('.dialog__title').querySelector('img');
 
+  var setField = function (parentElement, fieldName, content) {
+    var fieldElement = parentElement.querySelector('.lodge__' + fieldName);
+
+    fieldElement.textContent = content;
+  };
+
+
   var render = function (ad) {
-    // след. селектор нельзя выносить за пределы фунции, иначе ниже parentNode будет равен null
-    var destPanelElement = document.querySelector('.dialog__panel');
-
     var newPanelElement = templateElement.content.cloneNode(true);
-
-    var setField = function (field, content) {
-      // след. селектор можно вынести за пределы функции, но функция setField для конкретного поля
-      // используется всегда ровно 1 раз, делать же оптимизацию, вынося селектор за пределы render нельзя,
-      // т.к. newPanelElement каждый раз новый - см. cloneNode выше
-      var fieldElement = newPanelElement.querySelector('.lodge__' + field);
-
-      fieldElement.textContent = content;
-    };
-
 
     var offer = ad.offer;
 
@@ -32,13 +27,13 @@ window.card = (function () {
     var featuresDivElement = newPanelElement.querySelector('.lodge__features');
 
 
-    setField('title', offer.title);
-    setField('address', offer.address);
-    setField('price', offer.price + RUBLE_SIGN + '/ночь');
-    setField('type', offerType);
-    setField('rooms-and-guests', 'Для ' + offer.guests + ' гостей в ' + offer.rooms + ' комнатах');
+    setField(newPanelElement, 'title', offer.title);
+    setField(newPanelElement, 'address', offer.address);
+    setField(newPanelElement, 'price', offer.price + RUBLE_SIGN + '/ночь');
+    setField(newPanelElement, 'type', offerType);
+    setField(newPanelElement, 'rooms-and-guests', 'Для ' + offer.guests + ' гостей в ' + offer.rooms + ' комнатах');
 
-    setField('checkin-time', 'Заезд после ' + offer.checkin + ', выезд до ' + offer.checkout);
+    setField(newPanelElement, 'checkin-time', 'Заезд после ' + offer.checkin + ', выезд до ' + offer.checkout);
 
 
     offer.features.forEach(function (feature) {
@@ -51,7 +46,7 @@ window.card = (function () {
     });
 
 
-    setField('description', offer.description);
+    setField(newPanelElement, 'description', offer.description);
 
 
     var lodgePhotosDivElement = newPanelElement.querySelector('.lodge__photos');
@@ -72,8 +67,11 @@ window.card = (function () {
 
     fragment.appendChild(newPanelElement);
 
-    destPanelElement.parentNode.replaceChild(fragment, destPanelElement);
 
+    // querySelector('.dialog__panel') нельзя выносить из render,
+    // т.к. dialog__panel при каждом вызове render замещается
+
+    offerDialogElement.replaceChild(fragment, document.querySelector('.dialog__panel'));
 
     titleImageElement.src = ad.author.avatar;
   };

@@ -162,11 +162,8 @@ window.pin = (function () {
 
 
   var filterFeatures = function (features) {
-    var checkedFeatureFilterElements =
-      filterContainerElement.querySelectorAll('#housing_features input[name="feature"]:checked');
-
-    for (var i = 0; i < checkedFeatureFilterElements.length; i++) {
-      if (features.indexOf(checkedFeatureFilterElements[i].value) === -1) {
+    for (var i = 0; i < featureFilterElements.length; i++) {
+      if (featureFilterElements[i].checked && (features.indexOf(featureFilterElements[i].value) === -1)) {
         return false;
       }
     }

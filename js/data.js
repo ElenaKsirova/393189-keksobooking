@@ -28,14 +28,6 @@ window.data = (function () {
     'бунгало'
   ];
 
-  var OFFER_ROOM_NUMBERS = [
-    '1', '2', '3', '100'
-  ];
-
-  var OFFER_CAPACITY = [
-    '1', '2', '3', '0'
-  ];
-
 
   var getOfferTypeCaption = function (offerType) {
     var offerTypeIndex = OFFER_TYPES.indexOf(offerType);
@@ -57,12 +49,10 @@ window.data = (function () {
         max: LOCATION_Y_MAX
       }
     },
-    checkInTimes: CHECK_IN_TIMES,
-    checkOutTimes: CHECK_OUT_TIMES,
-    offerTypes: OFFER_TYPES,
-    offerMinPrices: OFFER_MIN_PRICES,
-    offerRoomNumbers: OFFER_ROOM_NUMBERS,
-    offerCapacity: OFFER_CAPACITY,
+    CHECK_IN_TIMES: CHECK_IN_TIMES,
+    CHECK_OUT_TIMES: CHECK_OUT_TIMES,
+    OFFER_TYPES: OFFER_TYPES,
+    OFFER_MIN_PRICES: OFFER_MIN_PRICES,
     getOfferTypeCaption: getOfferTypeCaption
   };
 })();
